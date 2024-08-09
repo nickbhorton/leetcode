@@ -31,3 +31,7 @@ add_executable(
     273 
     273.cc
 )
+add_executable(
+    840
+    840.cc
+)
