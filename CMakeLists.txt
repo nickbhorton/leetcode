@@ -35,3 +35,11 @@ add_executable(
     840
     840.cc
 )
+add_executable(
+    885 
+    885.cc
+)
+add_executable(
+    959 
+    959.cc
+)

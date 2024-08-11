@@ -12,6 +12,33 @@ public:
         size_t col
     )
     {
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                for (size_t a = 0; a < 3; a++) {
+                    for (size_t b = 0; b < 3; b++) {
+                        if (i != a && j != b &&
+                            grid[row + i][col + j] == grid[row + a][col + b]) {
+                            return false;
+                        }
+                    }
+                }
+                switch (grid[i][j]) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    break;
+                default:
+                    return false;
+                }
+            }
+        }
+
         int checked_sum{-1};
         for (size_t i = 0; i < 3; i++) {
             int rsum{};
@@ -74,8 +101,6 @@ public:
 int main()
 {
     Solution s;
-    std::vector<std::vector<int>> grid = {
-        {{4, 3, 8, 4}, {9, 5, 1, 9}, {2, 7, 6, 2}}
-    };
+    std::vector<std::vector<int>> grid = {{{10, 3, 5}, {1, 6, 11}, {7, 9, 2}}};
     std::cout << s.numMagicSquaresInside(grid) << "\n";
 }
