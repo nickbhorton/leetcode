@@ -7,47 +7,26 @@ project(
     LANGUAGES CXX
 )
 
-add_executable(
-    1460
-    1460.cc
-)
-add_executable(
-    1508 
-    1508.cc
-)
-add_executable(
-    2053
-    2053.cc
-)
-add_executable(
-    3016
-    3016.cc
-)
-add_executable(
-    1535
-    1535.cc
-)
-add_executable(
-    273 
-    273.cc
-)
-add_executable(
-    840
-    840.cc
-)
-add_executable(
-    885 
-    885.cc
-)
-add_executable(
-    959 
-    959.cc
-)
-add_executable(
-    1568 
-    1568.cc
-)
-add_executable(
-    703
-    703.cc
-)
+function(PROBLEM NUMBER)
+    add_executable(
+        "${NUMBER}" 
+        "${NUMBER}.cc"
+    )
+endfunction()
+
+problem(1460)
+problem(1508)
+problem(2053)
+problem(3016)
+problem(1535)
+problem(273)
+problem(840)
+problem(885)
+problem(959)
+problem(1568)
+problem(703)
+problem(2092)
+problem(40)
+problem(213)
+problem(719)
+problem(9)
