@@ -5,6 +5,50 @@
 using std::string;
 
 struct Fraction {
+private:
+    static int gcd(int a, int b)
+    {
+        int result = std::min(a, b);
+        while (result > 0) {
+            if (a % result == 0 && b % result == 0) {
+                break;
+            }
+            result--;
+        }
+        return result;
+    }
+
+public:
+    Fraction(int numerator, int denominator)
+    {
+        if (numerator != 0 && denominator < 0) {
+            this->numerator = -numerator;
+            this->denominator = -denominator;
+        } else if (denominator == 0) {
+            this->numerator = 0;
+            this->denominator = 0;
+            return;
+        } else if (numerator == 0) {
+            this->numerator = 0;
+            this->denominator = 1;
+            return;
+        } else {
+            this->numerator = numerator;
+            this->denominator = denominator;
+        }
+        int factor{
+            gcd(this->numerator < 0 ? -this->numerator : this->numerator,
+                this->denominator)
+        };
+        if (factor > 0) {
+            this->numerator /= factor;
+            this->denominator /= factor;
+        } else {
+            std::cerr << "the gcd of " << this->numerator << " and "
+                      << this->denominator << " was " << factor << "\n";
+            std::exit(1);
+        }
+    }
     int numerator;
     int denominator;
 };
@@ -15,57 +59,23 @@ std::ostream& operator<<(std::ostream& os, Fraction const& f)
     return os;
 }
 
-static int gcd(int a, int b)
-{
-    // Find Minimum of a and b
-    int result = std::min(a, b);
-    while (result > 0) {
-        if (a % result == 0 && b % result == 0) {
-            break;
-        }
-        result--;
-    }
-
-    // Return gcd of a and b
-    return result;
-}
-
 enum class Operator { Plus, Minus };
 
 Fraction apply_op(Fraction const& f1, Fraction const& f2, Operator const& op)
 {
-    Fraction result{};
-    Fraction f1c{f1};
-    Fraction f2c{f2};
-    if (f1.denominator != f2.denominator) {
-        f1c.numerator *= f2.denominator;
-        f1c.denominator *= f2.denominator;
-        f2c.numerator *= f1.denominator;
-        f2c.denominator *= f1.denominator;
-        assert(f1c.denominator == f2c.denominator);
-    }
     switch (op) {
     case Operator::Plus:
-        result.numerator = f1c.numerator + f2c.numerator;
-        break;
+        return Fraction(
+            f1.numerator * f2.denominator + f2.numerator * f1.denominator,
+            f1.denominator * f2.denominator
+        );
     case Operator::Minus:
-        result.numerator = f1c.numerator - f2c.numerator;
-        break;
+        return Fraction(
+            f1.numerator * f2.denominator - f2.numerator * f1.denominator,
+            f1.denominator * f2.denominator
+        );
     }
-    result.denominator = f1c.denominator;
-    int factor{gcd(result.numerator, result.denominator)};
-    if (factor != 0) {
-        result.numerator /= factor;
-        result.denominator /= factor;
-    }
-    if (result.numerator == 0) {
-        result.denominator = 1;
-    }
-    if (result.denominator < 0) {
-        result.numerator = -result.numerator;
-        result.denominator = -result.denominator;
-    }
-    return result;
+    return Fraction(0, 0);
 }
 
 Fraction operator+(Fraction const& f1, Fraction const& f2)
@@ -82,13 +92,13 @@ class Solution
 {
     Fraction parse_fraction(std::stringstream& ss)
     {
-        Fraction result{};
-        ss >> result.numerator;
+        int numerator{};
+        ss >> numerator;
         char slash{};
         ss >> slash;
-        ss >> result.denominator;
-        // std::cout << result << "\n";
-        return result;
+        int denominator{};
+        ss >> denominator;
+        return Fraction(numerator, denominator);
     }
 
     Operator parse_op(std::stringstream& ss)
@@ -130,8 +140,17 @@ public:
 int main()
 {
     Solution s{};
-    // s.fractionAddition("-1/2+1/2");
-    std::cout << s.fractionAddition("-1/4+1/2") << "\n";
+    Fraction f1(1, 2);
+    Fraction f2(-1, 2);
+    Fraction f3(1, -2);
+    Fraction f4(-1, -2);
+    Fraction f5(2, 4);
+    std::cout << f1 << "\n";
+    std::cout << f2 << "\n";
+    std::cout << f3 << "\n";
+    std::cout << f4 << "\n";
+    std::cout << f5 << "\n";
+    std::cout << s.fractionAddition("-1/2+1/2") << "\n";
     std::cout << s.fractionAddition("-1/2+1/2+1/3") << "\n";
     std::cout << s.fractionAddition("1/3-1/2") << "\n";
     std::cout << s.fractionAddition("5/3-1/3") << "\n";
